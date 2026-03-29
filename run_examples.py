@@ -4,20 +4,20 @@ import argparse
 import random
 import yaml
 
-from .examples import (
+from .src.examples import (
     simple_world,
     stochastic_world,
     wall_penalty_world,
     risky_corridor_world,
 )
-from .gridworld import make_grid_world, print_cost_grid
-from .dp_solver import (
+from .src.gridworld import make_grid_world, print_cost_grid
+from .src.dp_solver import (
     value_iteration_shortest_path,
     greedy_policy_from_V,
     simulate_policy,
     simulate_policy_stochastic,
 )
-from .lp_solver import (
+from .src.lp_solver import (
     solve_shortest_path_lp_gurobi,
     recover_policy_from_x_gurobi,
     print_policy_grid_gurobi,
