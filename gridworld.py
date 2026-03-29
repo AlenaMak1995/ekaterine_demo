@@ -73,7 +73,7 @@ class GridWorld:
 
     def transitions(self, s: State, a: Action) -> Dict[State, float]:
         """
-        Transition kernel P(s' | s, a).
+        Transition kernel T(s, a, s').
 
         With slip = eps:
         - intended action gets probability 1 - eps
