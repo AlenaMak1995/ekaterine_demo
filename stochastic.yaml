@@ -1,0 +1,9 @@
+mdp:
+  N: 5
+  start: [4, 0]
+  goal:
+    - [0, 4]
+
+  default_cost: 1.0
+
+  slip_prob: 0.2
