@@ -60,7 +60,7 @@ Run from the parent directory of ekaterine_demo:
 python -m ekaterine_demo.run_examples --world stochastic
 ```
 
-Available example worlds
+####  Available example worlds
 
 ```bash
 --world simple
@@ -68,3 +68,47 @@ Available example worlds
 --world wall_penalty
 --world risky_corridor
 ```
+
+### 6. Running with YAML config
+
+You can also define your own environment via YAML:
+
+```bash
+python -m ekaterine_demo.run_examples --config ekaterine_demo/configs/stochastic.yaml
+```
+####  Example YAML
+
+```bash
+mdp:
+  N: 5
+  start: [4, 0]
+  goal:
+    - [0, 4]
+
+  default_cost: 1.0
+  slip_prob: 0.2
+```
+
+Optional:
+
+```bash
+cell_costs:
+  - [2, 2, 20.0]
+
+rect_costs:
+  - [3, 0, 4, 4, 5.0]
+```
+
+####  What the script does
+
+For a given MDP:
+
+Solves using DP (value iteration)
+Solves using LP (Gurobi)
+Compares results:
+DP value at start
+LP objective
+Prints:
+cost grid
+sample trajectories
+recovered LP policy
