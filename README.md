@@ -18,4 +18,25 @@ It includes:
 
 ```bash
 conda create -n ekaterine python=3.10
-conda activate ekaterine
+conda activate <<environment name>>
+```
+
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Gurobi 
+
+This project uses Gurobi for the LP solver.
+
+Install: pip install gurobipy
+You need a valid license (academic license is free)
+
+Test:
+
+```bash
+python -c "import gurobipy as gp; gp.Model()"
+```
