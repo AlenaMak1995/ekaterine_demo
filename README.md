@@ -99,22 +99,29 @@ rect_costs:
   - [3, 0, 4, 4, 5.0]
 ```
 
-####  What the script does
+#### What the script does
 
 For a given MDP:
 
-Solves using DP (value iteration)
+- **DP (value iteration)** → ground truth solution  
+- **LP (Gurobi)** → occupancy-measure formulation  
+- **Comparison**:
+  - DP value at start
+  - LP objective  
+- **Outputs**:
+  - cost grid
+  - sample trajectories
+  - recovered LP policy
 
-Solves using LP (Gurobi)
+---
 
-Compares results:
+#### Expected behavior
 
-DP value at start
+- DP and LP values should match closely:
 
-LP objective
+```text
+|DP(start) - LP| ≈ 1e-6
+```
+With slip → trajectories become stochastic
 
-
-Prints:
-cost grid
-sample trajectories
-recovered LP policy
+With high-cost regions → policy avoids risky areas
