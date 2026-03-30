@@ -104,10 +104,16 @@ rect_costs:
 For a given MDP:
 
 Solves using DP (value iteration)
+
 Solves using LP (Gurobi)
+
 Compares results:
+
 DP value at start
+
 LP objective
+
+
 Prints:
 cost grid
 sample trajectories
