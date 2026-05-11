@@ -1,0 +1,60 @@
+mdp:
+  N: 4
+  start: [3, 0]
+  goal:
+    - [0, 3]
+  default_cost: 1.0
+  slip_prob: 0.1
+
+  cell_costs:
+    - [1, 0, 10.0]
+    - [1, 1, 5.0]
+    - [1, 2, 8.0]
+    - [2, 1, 3.0]
+    - [2, 3, 5.0]
+    - [3, 2, 1.0]
+
+run:
+  solver: "pctl_lp"
+
+lp:
+  solver: "CLARABEL"
+
+
+pctl:
+  p_goal_min: 1.0
+
+  flags:
+    - name: "G2"
+      region:
+        union: 
+          - rect: [2, 0, 2, 1]
+          - rect: [3, 0, 3, 0]
+
+    - name: "G3"
+      region:
+        union:
+          - rect: [2, 2, 2, 2]
+          - rect: [1, 0, 1, 0]
+          
+
+    - name: "G4"
+      region:
+        union: 
+          - rect: [3, 1, 3, 3]
+
+  until_specs:
+    - name: "G2U_G3"
+      A: "G2"
+      B: "G3"
+
+  # region_constraints: []
+  region_constraints:
+  - type: "visit_region_max"
+    region: "G4"
+    p: 0.2
+
+  until_constraints:
+    - type: "until_min"
+      until: "G2U_G3"
+      p: 0.45

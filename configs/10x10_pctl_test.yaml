@@ -1,0 +1,68 @@
+mdp:
+  N: 10
+  start: [9, 0]
+  goal:
+    - [0, 9]
+  default_cost: 1.0
+  slip_prob: 0.2
+
+  # Make G4 expensive so the optimal policy avoids it if possible.
+  cell_costs:
+    - [8, 1, 20.0]
+    - [8, 2, 20.0]
+    - [7, 2, 20.0]
+    - [7, 3, 20.0]
+    - [6, 3, 20.0]
+    - [6, 4, 20.0]
+
+run:
+  solver: "pctl_lp"
+
+lp:
+  solver: "CLARABEL"
+
+pctl:
+  # For stochastic LP + numerical solver, 1.0 can be too strict.
+  # Use 0.999 for smoke testing.
+  p_goal_min: 0.99
+
+  flags:
+    # G2 = safe corridor from start upward and then right.
+    # Since start is inside G2, the until formula starts "armed".
+    - name: "G2"
+      region:
+        union:
+          - rect: [9, 0, 9, 0]
+          - rect: [8, 0, 8, 0]
+          - rect: [7, 0, 7, 0]
+          - rect: [6, 0, 6, 0]
+          - rect: [5, 0, 5, 4]
+
+    # G3 = target checkpoint after staying in G2.
+    - name: "G3"
+      region:
+        union:
+          - rect: [5, 5, 5, 5]
+
+    # G4 = bad region / unsafe shortcut.
+    - name: "G4"
+      region:
+        union:
+          - rect: [8, 1, 8, 2]
+          - rect: [7, 2, 7, 3]
+          - rect: [6, 3, 6, 4]
+
+  until_specs:
+    - name: "G2U_G3"
+      A: "G2"
+      B: "G3"
+
+  region_constraints:
+    - type: "visit_region_max"
+      region: "G4"
+      p: 0.45
+
+  until_constraints:
+    - type: "until_min"
+      until: "G2U_G3"
+      p: 0.2
