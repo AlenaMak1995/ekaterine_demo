@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import argparse
 import random
+from time import time, sleep
 import yaml
+
+from .src.pedestrian_world import PedestrianMDP
 
 from .src.examples import (
     simple_world,
@@ -11,13 +14,13 @@ from .src.examples import (
     risky_corridor_world,
 )
 from .src.gridworld import make_grid_world, print_cost_grid
-from .src.dp_solver import (
+from .solvers.dp_solver import (
     value_iteration_shortest_path,
     greedy_policy_from_V,
     simulate_policy,
     simulate_policy_stochastic,
 )
-from .src.lp_solver import (
+from .solvers.lp_solver import (
     solve_shortest_path_lp_gurobi,
     recover_policy_from_x_gurobi,
     print_policy_grid_gurobi,
@@ -87,6 +90,39 @@ def build_mdp_from_yaml(path: str):
     )
 
     return mdp, cfg
+
+def draw_trajectory(mdp, traj, delay=0.5):
+     for step_idx, s in enumerate(traj):
+        print(f"\n--- Step {step_idx} ---")
+        
+        if isinstance(s[0], tuple):
+            agent_pos = s[0]
+            ped_positions = s[1:]
+        else:
+            agent_pos = s
+            ped_positions = []
+
+        for r in range(mdp.N):
+            row_str = ""
+            for c in range(mdp.N):
+                pos = (r, c)
+                
+                if pos == agent_pos and pos in ped_positions:
+                    row_str += " X "  
+                elif pos == agent_pos:
+                    if pos in mdp.goal:
+                        row_str += " G "  
+                    else:
+                        row_str += " A "  
+                elif pos in ped_positions:
+                    row_str += " P "  
+                else:
+                    row_str += " · "  
+                    
+            print(row_str)
+            
+        sleep(delay) 
+
 
 
 def main():
@@ -188,6 +224,21 @@ def main():
 
     print("\nDone.")
 
+
+    base_mdp = build_world("stochastic") 
+    # wrapped_mdp = PedestrianMDP(base_mdp, ped_starts=[(2, 2), (3,3)], collision_penalty=100.0)
+    wrapped_mdp = PedestrianMDP(base_mdp, ped_starts=[(2, 2)], collision_penalty=100.0)
+
+    V_ped = value_iteration_shortest_path(wrapped_mdp)
+    pi_ped = greedy_policy_from_V(wrapped_mdp, V_ped)
+
+    traj_ped = simulate_policy_stochastic(
+        wrapped_mdp, 
+        pi_ped, 
+        max_steps=args.max_steps, 
+        rng=rng
+    )
+    draw_trajectory(wrapped_mdp, traj_ped, delay=0.4)
 
 if __name__ == "__main__":
     main()

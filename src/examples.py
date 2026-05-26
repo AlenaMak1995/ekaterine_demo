@@ -10,15 +10,23 @@ def simple_world():
         slip_prob=0.0,
     )
 
-
 def stochastic_world():
     return make_grid_world(
-        N=5,
-        start=(4, 0),
-        goal={(0, 4)},
+        N=4,
+        start=(3, 0),
+        goal={(0, 3)},
         default_cost=1.0,
         slip_prob=0.2,
     )
+
+# def stochastic_world():
+#     return make_grid_world(
+#         N=5,
+#         start=(4, 0),
+#         goal={(0, 4)},
+#         default_cost=1.0,
+#         slip_prob=0.2,
+#     )
 
 
 def wall_penalty_world():

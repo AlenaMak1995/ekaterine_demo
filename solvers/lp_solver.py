@@ -7,7 +7,7 @@ import time
 import gurobipy as gp
 from gurobipy import GRB
 
-from .gridworld import GridWorld, State, Action
+from ..src.gridworld import GridWorld, State, Action
 
 
 def solve_shortest_path_lp_gurobi(mdp: GridWorld, verbose: bool = False, env=None):
