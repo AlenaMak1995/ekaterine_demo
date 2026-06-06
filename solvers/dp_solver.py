@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Dict, Optional, List
 import random
 
-from .gridworld import GridWorld, State, Action
+from ..src.gridworld import GridWorld, State, Action
 
 
 # =========================
