@@ -208,3 +208,23 @@ def make_4x4_pctl_world() -> GridWorld:
     def cost_cell(r, c):
         return cell_cost_dict.get((r, c), 1.0)
     return GridWorld(N=N, start=start, goal=goal, cost_cell=cost_cell)
+def print_regions_grid(N: int, start: Tuple[int, int], goal: Set[Tuple[int, int]], regions: Dict[str, Set[Tuple[int, int]]]) -> None:
+    for r in range(N):
+        row = []
+        for c in range(N):
+            s = (r, c)
+            if s == start:
+                row.append(" S ")
+            elif s in goal:
+                row.append(" G ")
+            else:
+                assigned = False
+                for name, reg in regions.items():
+                    if s in reg:
+                        row.append(f" {name[:1]} ")
+                        assigned = True
+                        break
+                if not assigned:
+                    row.append(" · ")
+        print("".join(row))
+    print()
