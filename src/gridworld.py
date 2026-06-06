@@ -191,3 +191,20 @@ def make_example_world() -> GridWorld:
         },
         slip_prob=0.0,
     )
+
+def make_4x4_pctl_world() -> GridWorld:
+    N = 4
+    goal = {(0, 3)}
+    start = (3, 0)
+    cell_cost_dict = {
+        (1, 0): 10,
+        (1, 1): 5,
+        (1, 2): 8,
+        (2, 1): 3,
+        (2, 3): 5,
+        (3, 2): 1,
+    }
+
+    def cost_cell(r, c):
+        return cell_cost_dict.get((r, c), 1.0)
+    return GridWorld(N=N, start=start, goal=goal, cost_cell=cost_cell)
